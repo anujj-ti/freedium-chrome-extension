@@ -1,0 +1,48 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "transform": {
+          "scheme": "https",
+          "host": "freedium.cfd",
+          "path": "/https://medium.com"
+        }
+      }
+    },
+    "condition": {
+      "urlFilter": "||medium.com",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "https://freedium.cfd/\\0"
+      }
+    },
+    "condition": {
+      "regexFilter": "^https://medium\\.com/.*",
+      "resourceTypes": ["main_frame"]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "https://freedium.cfd/\\0"
+      }
+    },
+    "condition": {
+      "regexFilter": "^https://[^.]+\\.medium\\.com/.*",
+      "resourceTypes": ["main_frame"]
+    }
+  }
+] 

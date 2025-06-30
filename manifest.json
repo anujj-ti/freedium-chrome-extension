@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Medium to Freedium Redirector",
+  "description": "Automatically redirects Medium articles to Freedium to bypass paywalls",
+  "version": "1.0",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "tabs",
+    "webNavigation",
+    "activeTab",
+    "declarativeNetRequest",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://medium.com/*",
+    "https://*.medium.com/*",
+    "https://freedium.cfd/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "logo.png"
+  },
+  "icons": {
+    "16": "logo.png",
+    "32": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "medium_redirect_rules",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
+} 
