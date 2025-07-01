@@ -1,15 +1,16 @@
+import StorageService from './services/storageService.js';
+
 // Medium to Freedium Redirector Background Script
 console.log('🚀 Medium to Freedium Redirector extension loaded with network-level redirects');
 
 // Extension state management
 class ExtensionManager {
   static async isEnabled() {
-    const result = await chrome.storage.local.get(['extensionEnabled']);
-    return result.extensionEnabled !== false; // Default to true
+    return StorageService.isEnabled();
   }
   
   static async setEnabled(enabled) {
-    await chrome.storage.local.set({ extensionEnabled: enabled });
+    await StorageService.setEnabled(enabled);
     
     if (enabled) {
       await this.enableRedirectRules();
@@ -45,16 +46,16 @@ class ExtensionManager {
 }
 
 // Handle extension installation and updates
-chrome.runtime.onInstalled.addListener(async (details) => {
-  console.log('📦 Extension installed/updated:', details.reason);
+chrome.runtime.onInstalled.addListener(async ({ reason }) => {
+  console.log('📦 Extension installed/updated:', reason);
   
   // Initialize extension state
-  const isEnabled = await ExtensionManager.isEnabled();
-  await ExtensionManager.setEnabled(isEnabled);
+  const enabled = await ExtensionManager.isEnabled();
+  await ExtensionManager.setEnabled(enabled);
   
-  if (details.reason === 'install') {
+  if (reason === 'install') {
     console.log('🎉 Welcome! Medium articles will now redirect to Freedium automatically.');
-  } else if (details.reason === 'update') {
+  } else if (reason === 'update') {
     console.log('⬆️ Extension updated with improved redirect performance!');
   }
 });
@@ -76,9 +77,9 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 // Monitor successful redirects for logging (only when enabled)
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
-    const isEnabled = await ExtensionManager.isEnabled();
+    const enabled = await ExtensionManager.isEnabled();
     
-    if (isEnabled && tab.url.includes('freedium.cfd/https://medium.com')) {
+    if (enabled && tab.url.includes('freedium.cfd/https://medium.com')) {
       console.log('✅ Successfully redirected to Freedium:', tab.url);
     }
   }
